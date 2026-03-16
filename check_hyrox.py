@@ -45,7 +45,7 @@ if __name__ == "__main__":
     print("Lunghezza HTML:", len(html))
     print("'Buy Tickets here' trovato:", "Buy Tickets here" in html.lower())
     print("'buy' trovato:", "buy" in html.lower())
-    print("'tickets' trovato:", "tickets" in html.lower())
+    print("'Tickets' trovato:", "Tickets" in html.lower())
 
     if check_tickets(html):
         print("🚨 BUY TICKETS HERE trovato! Invio email...")
