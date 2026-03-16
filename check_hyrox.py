@@ -22,8 +22,7 @@ def fetch_page(url):
     for i, line in enumerate(lines):
         if "buy tickets here" in line.lower():
             return True
-        else:
-            return False
+    return False
 
 def check_tickets(html):
     for line in html.splitlines():
