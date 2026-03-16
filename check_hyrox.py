@@ -23,7 +23,10 @@ def fetch_page(url):
     return r.text
 
 def check_tickets(html):
-    return 'Buy Tickets here' in html
+    for line in html.splitlines():
+        if "Buy Tickets here" in line.lower():
+            return True
+    return False
 
 # --- EMAIL ---
 def send_email(subject, body):
