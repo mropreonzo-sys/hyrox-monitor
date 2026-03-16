@@ -23,9 +23,7 @@ def fetch_page(url):
     return r.text
 
 def check_tickets(html):
-    soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text(separator=" ").lower()
-    return KEYWORD.lower() in text
+    return "buy tickets here" in html.lower()
 
 # --- EMAIL ---
 def send_email(subject, body):
