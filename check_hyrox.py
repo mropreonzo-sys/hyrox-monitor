@@ -49,7 +49,7 @@ def send_email(subject, body):
 if __name__ == "__main__":
     print(f"🔍 Controllo: {URL}")
     if fetch_page(url=URL):
-         print("🚨 BUY TICKETS HERE trovato! Invio email...")
+        print("🚨 BUY TICKETS HERE trovato! Invio email...")
         send_email(
             subject="🏃 HYROX MILANO — Iscrizioni APERTE!",
             body=f"Il bottone 'BUY TICKETS HERE' è comparso sulla pagina!\n\n👉 {URL}"
