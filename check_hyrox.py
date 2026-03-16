@@ -23,7 +23,7 @@ def fetch_page(url):
     return r.text
 
 def check_tickets(html):
-    return "buy tickets here" in html.lower()
+    return 'aria-label="Buy Tickets here"' in html
 
 # --- EMAIL ---
 def send_email(subject, body):
