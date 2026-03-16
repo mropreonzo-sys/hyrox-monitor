@@ -2,7 +2,7 @@ name: Hyrox Milano Monitor
 
 on:
   schedule:
-    - cron: '0 8,12 * * *'   # 3 volte/giorno: 7:00, 13:00, 19:00 UTC (= 9:00, 15:00, 21:00 ora italiana)
+    - cron: '0 10,15 * * *'   # 3 volte/giorno: 7:00, 13:00, 19:00 UTC (= 9:00, 15:00, 21:00 ora italiana)
   workflow_dispatch:              # puoi anche lanciarlo a mano dalla tab Actions
 
 jobs:
