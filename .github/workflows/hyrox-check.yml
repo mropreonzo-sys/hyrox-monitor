@@ -1,0 +1,28 @@
+name: Hyrox Milano Monitor
+
+on:
+  schedule:
+    - cron: '0 7,13,19 * * *'   # 3 volte/giorno: 7:00, 13:00, 19:00 UTC (= 9:00, 15:00, 21:00 ora italiana)
+  workflow_dispatch:              # puoi anche lanciarlo a mano dalla tab Actions
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installa dipendenze
+        run: pip install requests beautifulsoup4
+
+      - name: Esegui controllo Hyrox
+        env:
+          GMAIL_USER:         ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python check_hyrox.py
