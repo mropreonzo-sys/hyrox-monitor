@@ -21,7 +21,7 @@ def fetch_page(url):
     r = requests.get(url, headers=headers, timeout=20, verify=False)
     r.raise_for_status()
     lines = r.text.splitlines()
-    for line in html.splitlines():
+    for i, line in enumerate(lines):
         if "Buy Tickets here" in line:
             return True
     return False
