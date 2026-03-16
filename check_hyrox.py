@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 import os
 
 # --- CONFIG ---
-URL = "https://hyroxitaly.com/it/event/hyrox-verona/"
+URL = "https://hyroxitaly.com/it/event/hyrox-rimini-2/"
 KEYWORD = "BUY TICKETS HERE"   # esatto — case insensitive
 EMAIL_TO = "mropreonzo@gmail.com"
 
