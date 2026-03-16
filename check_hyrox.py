@@ -42,6 +42,13 @@ def send_email(subject, body):
 if __name__ == "__main__":
     print(f"🔍 Controllo: {URL}")
     html = fetch_page(url=URL)
+
+    idx = html.find("Tickets")
+    if idx != -1:
+        print("Tickets", repr(html[idx:idx+50]))
+    else:
+        print("Tickets non trovato")
+    
     print("Lunghezza HTML:", len(html))
     print("'Buy Tickets here' trovato:", "Buy Tickets here" in html.lower())
     print("'buy' trovato:", "buy" in html.lower())
