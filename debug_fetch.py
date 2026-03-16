@@ -8,6 +8,6 @@ print("Status code:", r.status_code)
 print("Lunghezza risposta:", len(r.text))
 
 # Cerca solo le righe con buy o ticket
-for i, line in enumerate(r.text.splitlines()):
-    if "buy" in line.lower() or "ticket" in line.lower():
-        print(f"Riga {i}: {line.strip()}")
+for i, line in enumerate(lines):
+    if "ticket" in line.lower() or "buy" in line.lower():
+        print(f"Riga {i} repr:", repr(line.strip()[:300]))
