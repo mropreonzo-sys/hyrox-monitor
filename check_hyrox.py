@@ -42,6 +42,10 @@ def send_email(subject, body):
 if __name__ == "__main__":
     print(f"🔍 Controllo: {URL}")
     html = fetch_page(url=URL)
+    print("Lunghezza HTML:", len(html))
+    print("'buy tickets here' trovato:", "buy tickets here" in html.lower())
+    print("'buy' trovato:", "buy" in html.lower())
+    print("'tickets' trovato:", "tickets" in html.lower())
 
     if check_tickets(html):
         print("🚨 BUY TICKETS HERE trovato! Invio email...")
