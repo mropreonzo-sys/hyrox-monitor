@@ -6,7 +6,7 @@ import os
 
 # --- CONFIG ---
 URL = "https://hyroxitaly.com/it/event/hyrox-rimini-2/"
-KEYWORD = "BUY TICKETS HERE"   # esatto — case insensitive
+KEYWORD = "buy tickets here"   # esatto — case insensitive
 EMAIL_TO = "mropreonzo@gmail.com"
 
 # --- FETCH con headers realistici ---
