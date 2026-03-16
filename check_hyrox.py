@@ -20,11 +20,15 @@ def fetch_page(url):
     }
     r = requests.get(url, headers=headers, timeout=20, verify=False)
     r.raise_for_status()
-    return r.text
+    lines = r.text.splitlines()
+    for line in html.splitlines():
+        if "Buy Tickets here" in line:
+            return True
+    return False
 
 def check_tickets(html):
     for line in html.splitlines():
-        if "Buy Tickets here" in line.lower():
+        if "Buy Tickets here" in line:
             return True
     return False
 
@@ -44,21 +48,8 @@ def send_email(subject, body):
 # --- MAIN ---
 if __name__ == "__main__":
     print(f"🔍 Controllo: {URL}")
-    html = fetch_page(url=URL)
-
-    idx = html.find("Tickets")
-    if idx != -1:
-        print("Tickets", repr(html[idx:idx+50]))
-    else:
-        print("Tickets non trovato")
-    
-    print("Lunghezza HTML:", len(html))
-    print("'Buy Tickets here' trovato:", "Buy Tickets here" in html.lower())
-    print("'buy' trovato:", "buy" in html.lower())
-    print("'Tickets' trovato:", "Tickets" in html.lower())
-
-    if check_tickets(html):
-        print("🚨 BUY TICKETS HERE trovato! Invio email...")
+    if fetch_page(url=URL):
+         print("🚨 BUY TICKETS HERE trovato! Invio email...")
         send_email(
             subject="🏃 HYROX MILANO — Iscrizioni APERTE!",
             body=f"Il bottone 'BUY TICKETS HERE' è comparso sulla pagina!\n\n👉 {URL}"
