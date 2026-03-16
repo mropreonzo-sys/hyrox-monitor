@@ -11,21 +11,18 @@ EMAIL_TO = "mropreonzo@gmail.com"
 
 # --- FETCH con headers realistici ---
 def fetch_page(url):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Referer": "https://hyroxitaly.com/it/",
-    }
-    r = requests.get(url, headers=headers, timeout=20, verify=False)
-    r.raise_for_status()
+    urllib3.disable_warnings()
+
+    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    r = requests.get("https://hyroxitaly.com/it/event/hyrox-rimini-2/", headers=headers, verify=False, timeout=20)
+
     lines = r.text.splitlines()
-    print('Lunghezza:', len(r.text))
+    # Cerca solo le righe con buy o ticket
     for i, line in enumerate(lines):
-        if "Buy Tickets here" in line:
+        if "buy tickets here" in line.lower():
             return True
-    return False
+        else
+            return False
 
 def check_tickets(html):
     for line in html.splitlines():
