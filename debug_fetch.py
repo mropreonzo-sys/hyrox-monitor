@@ -6,7 +6,7 @@ r = requests.get("https://hyroxitaly.com/it/event/hyrox-rimini-2/", headers=head
 
 print("Status code:", r.status_code)
 print("Lunghezza risposta:", len(r.text))
-
+lines = r.text.splitlines()
 # Cerca solo le righe con buy o ticket
 for i, line in enumerate(lines):
     if "ticket" in line.lower() or "buy" in line.lower():
