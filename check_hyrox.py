@@ -18,7 +18,7 @@ def fetch_page(url):
         "Accept-Encoding": "gzip, deflate, br",
         "Referer": "https://hyroxitaly.com/it/",
     }
-    r = requests.get(url, headers=headers, timeout=20)
+    r = requests.get(url, headers=headers, timeout=20, verify=False)
     r.raise_for_status()
     return r.text
 
