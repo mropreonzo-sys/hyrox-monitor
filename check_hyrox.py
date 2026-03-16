@@ -3,51 +3,29 @@ from bs4 import BeautifulSoup
 import smtplib
 from email.mime.text import MIMEText
 import os
-import hashlib
-import json
-from datetime import datetime
 
 # --- CONFIG ---
-URLS_TO_CHECK = [
-    "https://hyroxitaly.com/it/",                        # homepage eventi Italia
-    "https://hyroxitaly.com/it/events/",                 # pagina eventi (prova entrambe)
-]
-KEYWORDS_ALERT = [
-    "milano", "milan",
-    "iscrizioni aperte", "register now", "iscriviti ora",
-    "biglietti", "tickets", "buy now", "acquista"
-]
-KEYWORDS_IGNORE = ["sold out", "esaurito"]  # opzionale: avvisare anche in caso sold out
-EMAIL_TO   = "tua@email.com"     # <-- cambia con la tua email
-HASH_FILE  = "last_hash.json"    # salva hash tra un'esecuzione e l'altra
+URL = "https://hyroxitaly.com/it/event/hyrox-milan/"
+KEYWORD = "BUY TICKETS HERE"   # esatto — case insensitive
+EMAIL_TO = "mropreonzo@gmail.com"
 
-# --- FETCH ---
+# --- FETCH con headers realistici ---
 def fetch_page(url):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "it-IT,it;q=0.9,en;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Referer": "https://hyroxitaly.com/it/",
+    }
     r = requests.get(url, headers=headers, timeout=20)
     r.raise_for_status()
     return r.text
 
-def extract_text(html):
+def check_tickets(html):
     soup = BeautifulSoup(html, "html.parser")
-    for tag in soup(["script", "style", "nav", "footer"]):
-        tag.decompose()
-    return soup.get_text(separator=" ").lower()
-
-def get_hash(text):
-    return hashlib.md5(text[:8000].encode()).hexdigest()
-
-# --- LOAD/SAVE HASH ---
-def load_hashes():
-    try:
-        with open(HASH_FILE, "r") as f:
-            return json.load(f)
-    except Exception:
-        return {}
-
-def save_hashes(hashes):
-    with open(HASH_FILE, "w") as f:
-        json.dump(hashes, f)
+    text = soup.get_text(separator=" ").lower()
+    return KEYWORD.lower() in text
 
 # --- EMAIL ---
 def send_email(subject, body):
@@ -64,51 +42,14 @@ def send_email(subject, body):
 
 # --- MAIN ---
 if __name__ == "__main__":
-    hashes      = load_hashes()
-    alerts      = []
-    new_hashes  = {}
+    print(f"🔍 Controllo: {URL}")
+    html = fetch_page(url=URL)
 
-    for url in URLS_TO_CHECK:
-        print(f"\n🔍 Controllo: {url}")
-        try:
-            html        = fetch_page(url)
-            text        = extract_text(html)
-            curr_hash   = get_hash(text)
-            prev_hash   = hashes.get(url, "")
-            new_hashes[url] = curr_hash
-
-            found_kw    = [kw for kw in KEYWORDS_ALERT if kw in text]
-            page_changed = curr_hash != prev_hash
-
-            print(f"   Keywords trovate : {found_kw or 'nessuna'}")
-            print(f"   Pagina cambiata  : {'SÌ ⚠️' if page_changed else 'no'}")
-
-            if found_kw or page_changed:
-                alerts.append({
-                    "url": url,
-                    "keywords": found_kw,
-                    "changed": page_changed
-                })
-
-        except Exception as e:
-            print(f"   ❌ Errore: {e}")
-            alerts.append({"url": url, "keywords": [], "changed": False, "error": str(e)})
-
-    save_hashes(new_hashes)
-
-    if alerts:
-        now  = datetime.now().strftime("%d/%m/%Y %H:%M")
-        body = f"🏃 HYROX MILANO MONITOR — {now}\n\n"
-        for a in alerts:
-            body += f"URL: {a['url']}\n"
-            if a.get("error"):
-                body += f"⚠️ Errore: {a['error']}\n"
-            else:
-                body += f"Keywords trovate : {', '.join(a['keywords']) if a['keywords'] else 'nessuna'}\n"
-                body += f"Pagina cambiata  : {'SÌ ⚠️' if a['changed'] else 'no'}\n"
-            body += "\n"
-        body += f"\n👉 Vai a controllare: https://hyroxitaly.com/it/\n"
-
-        send_email("🚨 Hyrox Milano – Controlla le iscrizioni!", body)
+    if check_tickets(html):
+        print("🚨 BUY TICKETS HERE trovato! Invio email...")
+        send_email(
+            subject="🏃 HYROX MILANO — Iscrizioni APERTE!",
+            body=f"Il bottone 'BUY TICKETS HERE' è comparso sulla pagina!\n\n👉 {URL}"
+        )
     else:
-        print("\n✅ Nessuna novità rilevante.")
+        print("✅ Nessun bottone trovato. Iscrizioni ancora chiuse.")
