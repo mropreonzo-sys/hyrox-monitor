@@ -15,7 +15,7 @@ def fetch_page(url):
     urllib3.disable_warnings()
 
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-    r = requests.get("https://hyroxitaly.com/it/event/hyrox-rimini-2/", headers=headers, verify=False, timeout=20)
+    r = requests.get("https://hyroxitaly.com/it/event/hyrox-milan/", headers=headers, verify=False, timeout=20)
 
     lines = r.text.splitlines()
     # Cerca solo le righe con buy o ticket
